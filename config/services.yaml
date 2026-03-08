@@ -1,0 +1,14 @@
+parameters:
+    openweather_api_key: "%env(OPENWEATHER_API_KEY)%"
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: "../src/"
+
+    App\Service\MeteoService:
+        arguments:
+            $openWeatherApiKey: '%openweather_api_key%'
