@@ -1,4 +1,4 @@
-# 🌱 EcoGarden & Co — API REST Symfony
+#  EcoGarden & Co — API REST Symfony
 
 EcoGarden & Co est une API REST développée avec Symfony permettant :
 - la gestion d’utilisateurs,
@@ -8,7 +8,7 @@ EcoGarden & Co est une API REST développée avec Symfony permettant :
 
 ---
 
-## 🚀 Technologies utilisées
+##  Technologies utilisées
 - Symfony 6
 - PHP 8+
 - Doctrine ORM
@@ -18,7 +18,7 @@ EcoGarden & Co est une API REST développée avec Symfony permettant :
 
 ---
 
-## 📦 Installation
+##  Installation
 
 ```bash
 composer install
@@ -26,5 +26,5 @@ php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 
 
-👤 Auteur
+ Auteur
 Développé par Aly dans le cadre du projet OpenClassrooms.# OC12
