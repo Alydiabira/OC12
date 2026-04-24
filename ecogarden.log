@@ -1,3 +1,11 @@
 2026-03-08 18:08:12 — METEO rosny: {"ville":"Rosny","temperature":5,"description":"ciel d\u00e9gag\u00e9","humidite":75,"vent":1.54}
 2026-03-08 18:08:31 — DELETE CONSEIL 4: {"message":"Conseil supprim\u00e9"}
 2026-03-08 18:08:41 — VIEW CONSEILS ALL: []
+2026-04-23 19:16:18 — ADD CONSEIL: 
+2026-04-23 19:17:18 — EDIT CONSEIL 5: 
+2026-04-23 19:23:22 — VIEW USERS: <a href="https://localhost:8000/user">Temporary Redirect</a>.
+2026-04-23 19:38:40 — VIEW CONSEILS ALL: <a href="https://localhost:8000/conseil">Temporary Redirect</a>.
+2026-04-23 19:39:15 — DELETE USER 7: 
+2026-04-23 19:39:26 — VIEW USERS: <a href="https://localhost:8000/user">Temporary Redirect</a>.
+2026-04-23 19:40:27 — DELETE USER 7: 
+2026-04-23 19:41:18 — EDIT USER 7: 
