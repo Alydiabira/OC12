@@ -1,128 +1,156 @@
-#  EcoGarden & Co — API REST Symfony
-
-EcoGarden & Co est une API REST développée avec Symfony permettant :
-- la gestion d’utilisateurs,
-- la récupération de conseils de jardinage,
-- la récupération de données météo via une API publique,
-- la gestion avancée des conseils pour les administrateurs.
-
----
-
-##  Technologies utilisées
-- Symfony 6
-- PHP 8+
-- Doctrine ORM
-- JWT Authentication (LexikJWT)
-- OpenWeatherMap API
-- MySQL / MariaDB
-
----
-
-##  Installation
-
-```bash
+Auto‑évaluation du projet — GreenGoodies (Symfony)
+1. Développement du back‑end Symfony
+Fonctionnalités attendues
+Site fonctionnel (aucune erreur au chargement)
+Liste des produits affichée sur la page d’accueil
+Inscription utilisateur
+Connexion utilisateur
+Panier fonctionnel : ajout, consultation, validation
+Historique des commandes
+Activation/désactivation de l’accès API depuis le profil
+Composants Symfony utilisés
+Symfony 6+
+Forms + Validators
+Request pour la récupération des données
+Security pour l’authentification
+Fixtures pour les données produits
+Router Symfony
+Composer pour les dépendances
+Code commenté
+Optimisation Green Code (images optimisées, assets minifiés)
+2. Base de données & Doctrine
+Structure conforme
+Doctrine ORM
+Tables :
+utilisateurs
+produits
+commandes
+Pas de données dupliquées
+3. Vues Twig & affichage
+Conformité
+Vues générées avec Twig
+Héritage de templates (base.html.twig)
+Formulaires affichés via form_*
+Respect des maquettes
+4. API Symfony (JWT)
+Fonctionnalités API
+Authentification JWT via /api/login
+Récupération des produits via /api/products
+Routes conformes au document technique
+Accès API conditionné à l’activation dans le profil utilisateur
+Serializer + groupes
+Fonctionnalités principales
+Côté utilisateur
+Inscription / Connexion
+Consultation des produits
+Panier + validation
+Historique des commandes
+Activation API
+API sécurisée
+/api/login
+/api/products
+Accès conditionné
+Technique
+Symfony 6+
+Doctrine ORM
+Fixtures
+Serializer (Groupes)
+JWT (LexikJWTAuthenticationBundle)
+Assets optimisés
+Installation
+1. Cloner le projet
+bash
+git clone https://github.com/votre-repo/greengoodies.git
+cd greengoodies
+2. Installer les dépendances
+bash
 composer install
+3. Configurer l’environnement
+bash
+cp .env .env.local
+Modifier la ligne :
+Code
+DATABASE_URL="mysql://root:password@127.0.0.1:3306/greengoodies?serverVersion=8.0"
+4. Préparer la base de données
+bash
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
+php bin/console doctrine:fixtures:load -n
+5. Lancer le serveur
+bash
+symfony server:start -d
+Accès :
+Code
+https://127.0.0.1:8001/
+Tests Web (cURL)
+Page d’accueil
+bash
+curl -k https://127.0.0.1:8001/
+Inscription
+bash
+curl -k -X POST https://127.0.0.1:8001/register \
+ -H "Content-Type: application/x-www-form-urlencoded" \
+ -d "registration_form[lastname]=Test&registration_form[firstname]=User&registration_form[email]=test1@gmail.com&registration_form[password]=password&registration_form[confirmPassword]=password&registration_form[acceptCgu]=1"
+Connexion
+bash
+curl -k -c cookies.txt -b cookies.txt -X POST https://127.0.0.1:8001/login \
+ -H "Content-Type: application/x-www-form-urlencoded" \
+ -d "_username=test1@gmail.com&_password=password"
+Ajouter au panier
+bash
+curl -k -c cookies.txt -b cookies.txt https://127.0.0.1:8001/panier/ajouter/1
+Afficher le panier
+bash
+curl -k -c cookies.txt -b cookies.txt https://127.0.0.1:8001/panier
+Valider le panier
+bash
+curl -k -c cookies.txt -b cookies.txt https://127.0.0.1:8001/panier/valider
+Historique commandes
+bash
+curl -k -c cookies.txt -b cookies.txt https://127.0.0.1:8001/mon-compte
+Toggle API
+bash
+curl -k -c cookies.txt -b cookies.txt -X POST https://127.0.0.1:8001/mon-compte/api/toggle
+Tests API (cURL)
+Login API
+bash
+curl -k -X POST https://127.0.0.1:8001/api/login \
+ -H "Content-Type: application/json" \
+ -d '{"username":"test1@gmail.com","password":"password"}'
+Mauvais mot de passe
+bash
+curl -k -X POST https://127.0.0.1:8001/api/login \
+ -H "Content-Type: application/json" \
+ -d '{"username":"test1@gmail.com","password":"wrong"}'
+Accès API désactivé (403 attendu)
+bash
+curl -k -X POST https://127.0.0.1:8001/api/login \
+ -H "Content-Type: application/json" \
+ -d '{"username":"test1@gmail.com","password":"password"}'
+Récupérer les produits avec JWT
+bash
+TOKEN=$(curl -sk -X POST https://127.0.0.1:8001/api/login \
+ -H "Content-Type: application/json" \
+ -d '{"username":"test1@gmail.com","password":"password"}' | jq -r .token)
 
-
- Auteur
-Développé par Aly dans le cadre du projet OpenClassrooms.# OC12
-
-
-
-#!/bin/bash
-
-BASE_URL="https://127.0.0.1:8001"
-
-echo "=== 1) Création d'un utilisateur ==="
-curl -k -X POST $BASE_URL/user \
-    -H "Content-Type: application/json" \
-    -d '{"email":"test@test.com","password":"1234","ville":"Paris"}'
-echo -e "\n"
-
-echo "=== 2) Authentification ==="
-TOKEN=$(curl -k -s -X POST $BASE_URL/auth \
-    -H "Content-Type: application/json" \
-    -d '{"email":"test@test.com","password":"1234"}' | jq -r '.token')
-
-echo "TOKEN UTILISATEUR : $TOKEN"
-echo -e "\n"
-
-echo "=== 3) Conseils du mois en cours ==="
-curl -k -X GET $BASE_URL/conseil \
-    -H "Authorization: Bearer $TOKEN"
-echo -e "\n"
-
-echo "=== 4) Conseils du mois 3 ==="
-curl -k -X GET $BASE_URL/conseil/3 \
-    -H "Authorization: Bearer $TOKEN"
-echo -e "\n"
-
-echo "=== 5) Météo de Paris ==="
-curl -k -X GET $BASE_URL/meteo/Paris \
-    -H "Authorization: Bearer $TOKEN"
-echo -e "\n"
-
-echo "=== 6) Météo de l'utilisateur ==="
-curl -k -X GET $BASE_URL/meteo \
-    -H "Authorization: Bearer $TOKEN"
-echo -e "\n"
-
-echo "=== 7) Authentification ADMIN ==="
-TOKEN_ADMIN=$(curl -k -s -X POST $BASE_URL/auth \
-    -H "Content-Type: application/json" \
-    -d '{"email":"admin@test.com","password":"admin"}' | jq -r '.token')
-
-echo "TOKEN ADMIN : $TOKEN_ADMIN"
-echo -e "\n"
-
-echo "=== 8) Ajouter un conseil (ADMIN) ==="
-curl -k -X POST $BASE_URL/conseil \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $TOKEN_ADMIN" \
-    -d '{"contenu":"Planter les tomates","mois":[3,4,5]}'
-echo -e "\n"
-
-echo "=== 9) Modifier un conseil (ADMIN) ==="
-curl -k -X PUT $BASE_URL/conseil/1 \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $TOKEN_ADMIN" \
-    -d '{"contenu":"Arroser tôt le matin","mois":[4,5]}'
-echo -e "\n"
-
-echo "=== 10) Supprimer un conseil (ADMIN) ==="
-curl -k -X DELETE $BASE_URL/conseil/1 \
-    -H "Authorization: Bearer $TOKEN_ADMIN"
-echo -e "\n"
-
-echo "=== 11) Modifier un utilisateur (ADMIN) ==="
-curl -k -X PUT $BASE_URL/user/1 \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $TOKEN_ADMIN" \
-    -d '{"ville":"Lyon"}'
-echo -e "\n"
-
-echo "=== 12) Supprimer un utilisateur (ADMIN) ==="
-curl -k -X DELETE $BASE_URL/user/1 \
-    -H "Authorization: Bearer $TOKEN_ADMIN"
-echo -e "\n"
-
-echo "=== 13) Test erreur : sans token ==="
-curl -k -X GET $BASE_URL/conseil
-echo -e "\n"
-
-echo "=== 14) Test erreur : accès interdit (403) ==="
-curl -k -X POST $BASE_URL/conseil \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $TOKEN" \
-    -d '{"contenu":"Test","mois":[1]}'
-echo -e "\n"
-
-echo "=== 15) Test erreur : mois invalide ==="
-curl -k -X GET $BASE_URL/conseil/99 \
-    -H "Authorization: Bearer $TOKEN"
-echo -e "\n"
-
-echo "=== FIN DES TESTS ==="
-
+curl -k https://127.0.0.1:8001/api/products \
+ -H "Authorization: Bearer $TOKEN"
+Token invalide
+bash
+curl -k https://127.0.0.1:8001/api/products \
+ -H "Authorization: Bearer INVALID"
+Vérifications techniques
+Valider le schéma Doctrine
+bash
+php bin/console doctrine:schema:validate
+Recharger les fixtures
+bash
+php bin/console doctrine:fixtures:load -n
+Vérifier les assets
+bash
+ls -lh public/assets
+Vérifier les images optimisées
+bash
+ls -lh public/uploads
+Auteur
+Développé par Aly Diabira dans le cadre du parcours OpenClassrooms — Projet Symfony.
